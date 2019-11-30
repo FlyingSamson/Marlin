@@ -484,7 +484,7 @@
 // Comment the following line to disable PID and enable bang-bang.
 #define PIDTEMP
 #define BANG_MAX 255     // Limits current to nozzle while in bang-bang mode; 255=full current
-#define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
+#define PID_MAX 127 // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 
 #if ENABLED(PIDTEMP)
@@ -497,9 +497,9 @@
 
 
   // Flyingbear Tornado 2 Pro
-  #define DEFAULT_Kp 7.87
-  #define DEFAULT_Ki 0.40
-  #define DEFAULT_Kd 38.99
+  #define DEFAULT_Kp 10.37
+  #define DEFAULT_Ki 0.83
+  #define DEFAULT_Kd 32.49
 
   // Ultimaker
   // #define DEFAULT_Kp 22.2
@@ -570,7 +570,7 @@
   //#define PID_DEBUG             // Sends debug data to the serial port. Use 'M303 D' to toggle activation.
   //#define PID_OPENLOOP          // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
-  #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
+  #define PID_FUNCTIONAL_RANGE 20 // If the temperature difference between the target temperature and the actual temperature
                                   // is more than PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
 #endif
 
@@ -1081,7 +1081,7 @@
 #endif
 #define PROBING_FANS_OFF          // Turn fans off when probing
 //#define PROBING_STEPPERS_OFF      // Turn steppers off (unless needed to hold position) when probing
-//#define DELAY_BEFORE_PROBING 200  // (ms) To prevent vibrations from triggering piezo sensors
+#define DELAY_BEFORE_PROBING 200  // (ms) To prevent vibrations from triggering piezo sensors
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -1196,7 +1196,7 @@
   #define NUM_RUNOUT_SENSORS   EXTRUDERS     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
   #define FIL_RUNOUT_PIN 2    // this is the xmax pin, which is used for the run out sensor
   #if EXTRUDERS>1
-    #define FIL_RUNOUT2_PIN 19   // this is the zmax pin, which is used for the run out sensor
+    #define FIL_RUNOUT2_PIN 15   // this is the ymax pin, which is used for the run out sensor
   #endif
 
   #define FIL_RUNOUT_STATE     LOW        // Pin state indicating that filament is NOT present.
