@@ -497,9 +497,9 @@
 
 
   // Flyingbear Tornado 2 Pro
-  #define DEFAULT_Kp 10.37
-  #define DEFAULT_Ki 0.83
-  #define DEFAULT_Kd 32.49
+  #define DEFAULT_Kp 14.85
+  #define DEFAULT_Ki 1.62
+  #define DEFAULT_Kd 34.06
 
   // Ultimaker
   // #define DEFAULT_Kp 22.2
