@@ -491,16 +491,16 @@
 #if ENABLED(PIDTEMP)
   //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
   //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
-  //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
+  #define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
 
   // Flyingbear Tornado 2 Pro
-  #define DEFAULT_Kp 14.85
-  #define DEFAULT_Ki 1.62
-  #define DEFAULT_Kd 34.06
+  #define DEFAULT_Kp_LIST { 14.85}
+  #define DEFAULT_Ki_LIST {  1.62}
+  #define DEFAULT_Kd_LIST { 34.06}
 
   // Ultimaker
   // #define DEFAULT_Kp 22.2
@@ -536,7 +536,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
