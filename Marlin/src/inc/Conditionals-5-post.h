@@ -591,6 +591,142 @@
  */
 #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
 
+  // default values for tool definition
+  #if MAN_ST_NUM_TOOLS > 0
+    #ifndef TOOL_0_TOOLPLATE
+      #define TOOL_0_TOOLPLATE 0
+    #endif
+    #if HAS_HOTEND
+      #ifndef TOOL_0_E_STEPPER
+        #define TOOL_0_E_STEPPER 0
+      #endif
+      #ifndef TOOL_0_HOTEND
+        #define TOOL_0_HOTEND 0
+      #endif
+      #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_0_RUNOUT)
+        #define TOOL_0_RUNOUT 1
+      #endif
+    #endif
+
+    #if MAN_ST_NUM_TOOLS > 1
+      #ifndef TOOL_1_TOOLPLATE
+        #define TOOL_1_TOOLPLATE 1
+      #endif
+      #if HOTENDS > 1
+        #ifndef TOOL_1_E_STEPPER
+          #define TOOL_1_E_STEPPER 0
+        #endif
+        #ifndef TOOL_1_HOTEND
+          #define TOOL_1_HOTEND 0
+        #endif
+        #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_1_RUNOUT)
+          #define TOOL_1_RUNOUT 1
+        #endif
+      #endif
+
+      #if MAN_ST_NUM_TOOLS > 2
+        #ifndef TOOL_2_TOOLPLATE
+          #define TOOL_2_TOOLPLATE 2
+        #endif
+        #if HOTENDS > 2
+          #ifndef TOOL_2_E_STEPPER
+            #define TOOL_2_E_STEPPER 0
+          #endif
+          #ifndef TOOL_2_HOTEND
+            #define TOOL_2_HOTEND 0
+          #endif
+          #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_2_RUNOUT)
+            #define TOOL_2_RUNOUT 1
+          #endif
+        #endif
+
+        #if MAN_ST_NUM_TOOLS > 3
+          #ifndef TOOL_3_TOOLPLATE
+            #define TOOL_3_TOOLPLATE 3
+          #endif
+          #if HOTENDS > 3
+            #ifndef TOOL_3_E_STEPPER
+              #define TOOL_3_E_STEPPER 0
+            #endif
+            #ifndef TOOL_3_HOTEND
+              #define TOOL_3_HOTEND 0
+            #endif
+            #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_3_RUNOUT)
+              #define TOOL_3_RUNOUT 1
+            #endif
+          #endif
+
+          #if MAN_ST_NUM_TOOLS > 4
+            #ifndef TOOL_4_TOOLPLATE
+              #define TOOL_4_TOOLPLATE 4
+            #endif
+            #if HOTENDS > 4
+              #ifndef TOOL_4_E_STEPPER
+                #define TOOL_4_E_STEPPER 0
+              #endif
+              #ifndef TOOL_4_HOTEND
+                #define TOOL_4_HOTEND 0
+              #endif
+              #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_4_RUNOUT)
+                #define TOOL_4_RUNOUT 1
+              #endif
+            #endif
+
+            #if MAN_ST_NUM_TOOLS > 5
+              #ifndef TOOL_5_TOOLPLATE
+                #define TOOL_5_TOOLPLATE 5
+              #endif
+              #if HOTENDS > 5
+                #ifndef TOOL_5_E_STEPPER
+                  #define TOOL_5_E_STEPPER 0
+                #endif
+                #ifndef TOOL_5_HOTEND
+                  #define TOOL_5_HOTEND 0
+                #endif
+                #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_5_RUNOUT)
+                  #define TOOL_5_RUNOUT 1
+                #endif
+              #endif
+
+              #if MAN_ST_NUM_TOOLS > 6
+                #ifndef TOOL_6_TOOLPLATE
+                  #define TOOL_6_TOOLPLATE 6
+                #endif
+                #if HOTENDS > 6
+                  #ifndef TOOL_6_E_STEPPER
+                    #define TOOL_6_E_STEPPER 0
+                  #endif
+                  #ifndef TOOL_6_HOTEND
+                    #define TOOL_6_HOTEND 0
+                  #endif
+                  #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_6_RUNOUT)
+                    #define TOOL_6_RUNOUT 1
+                  #endif
+                #endif
+
+                #if MAN_ST_NUM_TOOLS > 7
+                  #ifndef TOOL_7_TOOLPLATE
+                    #define TOOL_7_TOOLPLATE 7
+                  #endif
+                  #if HOTENDS > 7
+                    #ifndef TOOL_7_E_STEPPER
+                      #define TOOL_7_E_STEPPER 0
+                    #endif
+                    #ifndef TOOL_7_HOTEND
+                      #define TOOL_7_HOTEND 0
+                    #endif
+                    #if NUM_RUNOUT_SENSORS > 0 && !defined(TOOL_7_RUNOUT)
+                      #define TOOL_7_RUNOUT 1
+                    #endif
+                  #endif
+                #endif // MAN_ST_NUM_TOOLS > 7
+              #endif // MAN_ST_NUM_TOOLS > 6
+            #endif // MAN_ST_NUM_TOOLS > 5
+          #endif // MAN_ST_NUM_TOOLS > 4
+        #endif // MAN_ST_NUM_TOOLS > 3
+      #endif // MAN_ST_NUM_TOOLS > 2
+    #endif // MAN_ST_NUM_TOOLS > 1
+  #endif // MAN_ST_NUM_TOOLS > 0
   // TEMP and HEATER overrides
   #if HOTENDS > 1
     #undef TEMP_1_PIN
