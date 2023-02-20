@@ -323,32 +323,69 @@
 //#define MANUAL_SWITCHING_TOOLHEAD
 #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
   /**
+   * Number of actual EXTRUDERS supported by board. I.e., number of e-steppers, hotend pins, and temp sensor pins
+   */
+  #define E_DRIVERS 2
+
+  /**
    * Number of tools that are being set up. The type of tool (e.g., hotend, unpowered tool)
    * depends on a TEMP_SENSOR_n being defined for each tool. Hotends must come first,
    * so start with TEMP_SENSOR_0.
    *
-   * Don't include a laser/spindle in this total; enable MAN_ST_CUTTER to put the cutter last.
+   * Also include a laser/spindle in this total; enable MAN_ST_CUTTER to put the cutter last.
    */
   #define MAN_ST_NUM_TOOLS 4
 
   /**
-   * Hotend / Extruder Setup
-   * By default the toolchange code assumes all hotends share a single extruder (e.g., in a Bowden setup).
-   * Enable this option if all hotends have their own direct drive extruders.
-   * If this is used, also consider enabling:
-   *  - DISTINCT_E_FACTORS and related settings
-   *  - PID_PARAMS_PER_HOTEND
+   * Hotend / Extruder Tool Setup
+   * By default the toolchange code assumes all hotends share a single stepper driver and extruder
+   * If you have more than one stepper driver and/or extruder, use the following to specify which tool
+   * will use which stepper and extruder and which tools are mounted on the same toolplate.
+   * Tools on the same plate can be switched without requireing user interaction.
+   *
+   * You must also specify one TEMP_SENSOR_n for each Hotend tool
+   *
+   * Add the following block for each hotend tool to customize the stepper driver, runout pin, and
+   * hotend pin used by that tool. Multi hotends like the E3D Chimera require one block per heater/nozzle
+   *
+   *   #define TOOL_n_E_STEPPER   ...  // in 0..E_DRIVERS-1 (default 0)
+   *   #define TOOL_n_RUNOUT      ...  // in 1..NUM_RUNOUT_SENSORS, typically = TOOL_n_E_STEPPER + 1 (default 1)
+   *   #define TOOL_n_HOTEND      ...  // in 0..E_DRIVERS-1 used to determine both heater and temp sensor pins (default 0)
+   *   #define TOOL_n_TOOLPLATE   ...  // group together tools that are mounted on the same tool plate (e.g., dual hotend) (default n)
+   *
+   * Example:
+   * - Toolplate one holds a dual-hotend (i.e., E3D Chimera), of which the first is connected to the first e-stepper and heater on the board
+   *   and the second is connected to the second e-stepper, and heater on the board
+   * - Toolplate two holds a single hotend (i.e., E3D V6), connected to the first e-stepper and heater on the board
+   * - Tollplate three holds a laser (no E_STEPPER, RUNPUT, or HOTEND override)
+   *
+   *   #define TOOL_0_E_STEPPER   0
+   *   #define TOOL_0_RUNOUT      (TOOL_0_E_STEPPER+1)
+   *   #define TOOL_0_HOTEND      TOOL_0_E_STEPPER
+   *   #define TOOL_0_TOOLPLATE   0
+   *
+   *   #define TOOL_1_E_STEPPER   1
+   *   #define TOOL_1_RUNOUT      (TOOL_1_E_STEPPER+1)
+   *   #define TOOL_1_HOTEND      TOOL_1_E_STEPPER
+   *   #define TOOL_1_TOOLPLATE   0
+   *
+   *   #define TOOL_2_E_STEPPER   0
+   *   #define TOOL_2_RUNOUT      (TOOL_2_E_STEPPER+1)
+   *   #define TOOL_2_HOTEND      TOOL_2_E_STEPPER
+   *   #define TOOL_2_TOOLPLATE   1
+   *
+   *   #define TOOL_3_TOOLPLATE   2
+   *
+   * Also consider
+   * - DISTINCT_E_FACTORS and related settings
+   * - HOTEND_OFFSET_(X|Y|Z)
+   * - TOOL_n_STEPPER_OVERRIDE (in Configuration_adv.h) if stepper motors differ (e.g., when using direct drive extruders on the toolplate)
    */
-  //#define MAN_ST_DIRECT_DRIVE
 
   // TODO: Extra Extruders; use these for extruder-only tools, such as cake/frosting/clay extruders.
   //#define MAN_ST_EXTRA_EXTRUDERS 0
 
-  /**
-   * TODO: Enable the LASER/SPINDLE tool. Can use LASER/SPINDLE_FEATURE or a fan-PWM based laser.
-   * Always the last tool. Cannot be used if MAN_ST_NUM_TOOLS > 7.
-   */
-  //#define MAN_ST_CUTTER
+
 
   /**
    * Define the names of Hotends/Unpowered tools. Optional.
