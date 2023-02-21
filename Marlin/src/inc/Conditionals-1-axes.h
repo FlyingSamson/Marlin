@@ -213,13 +213,6 @@
   // Non-hotend tools are classified as "unpowered tools"
   #define UNPOWERED_TOOLS (MAN_ST_NUM_TOOLS - HOTENDS)
 
-  #if ENABLED(MAN_ST_DIRECT_DRIVE)      // Multiple extruders - plates likely direct drive, or multiple bowden tools
-    #define STM_HAS_MULTI_EXTRUDER 1
-  #else                                 // Single extruder - plates don't have steppers on them
-    #define MAN_ST_SINGLE_EXTRUDER 1
-    #define E_STEPPERS  1
-  #endif
-
   #define E_MANUAL   1                  // Always one E (max) for manual control
 
 #elif ENABLED(SERVO_SWITCHING_TOOLHEAD) // Toolchanger
