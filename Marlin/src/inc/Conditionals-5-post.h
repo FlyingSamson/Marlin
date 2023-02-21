@@ -586,6 +586,57 @@
   #endif
 #endif
 
+
+#ifdef TEMP_0_PIN
+  #define TOOL_0_TEMP_PIN TEMP_0_PIN
+#endif
+#ifdef TEMP_1_PIN
+  #define TOOL_1_TEMP_PIN TEMP_1_PIN
+#endif
+#ifdef TEMP_2_PIN
+  #define TOOL_2_TEMP_PIN TEMP_2_PIN
+#endif
+#ifdef TEMP_3_PIN
+  #define TOOL_3_TEMP_PIN TEMP_3_PIN
+#endif
+#ifdef TEMP_4_PIN
+  #define TOOL_4_TEMP_PIN TEMP_4_PIN
+#endif
+#ifdef TEMP_5_PIN
+  #define TOOL_5_TEMP_PIN TEMP_5_PIN
+#endif
+#ifdef TEMP_6_PIN
+  #define TOOL_6_TEMP_PIN TEMP_6_PIN
+#endif
+#ifdef TEMP_7_PIN
+  #define TOOL_7_TEMP_PIN TEMP_7_PIN
+#endif
+
+#ifdef HEATER_0_PIN
+  #define TOOL_0_HEATER_PIN HEATER_0_PIN
+#endif
+#ifdef HEATER_1_PIN
+  #define TOOL_1_HEATER_PIN HEATER_1_PIN
+#endif
+#ifdef HEATER_2_PIN
+  #define TOOL_2_HEATER_PIN HEATER_2_PIN
+#endif
+#ifdef HEATER_3_PIN
+  #define TOOL_3_HEATER_PIN HEATER_3_PIN
+#endif
+#ifdef HEATER_4_PIN
+  #define TOOL_4_HEATER_PIN HEATER_4_PIN
+#endif
+#ifdef HEATER_5_PIN
+  #define TOOL_5_HEATER_PIN HEATER_5_PIN
+#endif
+#ifdef HEATER_6_PIN
+  #define TOOL_6_HEATER_PIN HEATER_6_PIN
+#endif
+#ifdef HEATER_7_PIN
+  #define TOOL_7_HEATER_PIN HEATER_7_PIN
+#endif
+
 /**
  * Manual Toolhead Switching - toolheads using common electrical connections
  */
@@ -728,54 +779,67 @@
     #endif // MAN_ST_NUM_TOOLS > 1
   #endif // MAN_ST_NUM_TOOLS > 0
   // TEMP and HEATER overrides
-  #if HOTENDS > 1
-    #undef TEMP_1_PIN
-    #undef HEATER_1_PIN
-    #define TEMP_1_PIN TEMP_0_PIN
-    #define HEATER_1_PIN HEATER_0_PIN
+  #define _TOOL_n_TEMP_PIN(N) TEMP_##N##_PIN
+  #define TOOL_n_TEMP_PIN(N) _TOOL_n_TEMP_PIN(N)
 
-    #if HOTENDS > 2
-      #undef TEMP_2_PIN
-      #undef HEATER_2_PIN
-      #define TEMP_2_PIN TEMP_0_PIN
-      #define HEATER_2_PIN HEATER_0_PIN
+  #define _TOOL_n_HEATER_PIN(N) HEATER_##N##_PIN
+  #define TOOL_n_HEATER_PIN(N) _TOOL_n_HEATER_PIN(N)
 
-      #if HOTENDS > 3
-        #undef TEMP_3_PIN
-        #undef HEATER_3_PIN
-        #define TEMP_3_PIN TEMP_0_PIN
-        #define HEATER_3_PIN HEATER_0_PIN
+  #if HAS_HOTEND
+    #undef TOOL_0_TEMP_PIN
+    #undef TOOL_0_HEATER_PIN
+    #define TOOL_0_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_0_HOTEND)
+    #define TOOL_0_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_0_HOTEND)
 
-        #if HOTENDS > 4
-          #undef TEMP_4_PIN
-          #undef HEATER_4_PIN
-          #define TEMP_4_PIN TEMP_0_PIN
-          #define HEATER_4_PIN HEATER_0_PIN
+    #if HOTENDS > 1
+      #undef TOOL_1_TEMP_PIN
+      #undef TOOL_1_HEATER_PIN
+      #define TOOL_1_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_1_HOTEND)
+      #define TOOL_1_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_1_HOTEND)
 
-          #if HOTENDS > 5
-            #undef TEMP_5_PIN
-            #undef HEATER_5_PIN
-            #define TEMP_5_PIN TEMP_0_PIN
-            #define HEATER_5_PIN HEATER_0_PIN
+      #if HOTENDS > 2
+        #undef TOOL_2_TEMP_PIN
+        #undef TOOL_2_HEATER_PIN
+        #define TOOL_2_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_2_HOTEND)
+        #define TOOL_2_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_2_HOTEND)
 
-            #if HOTENDS > 6
-              #undef TEMP_6_PIN
-              #undef HEATER_6_PIN
-              #define TEMP_6_PIN TEMP_0_PIN
-              #define HEATER_6_PIN HEATER_0_PIN
+        #if HOTENDS > 3
+          #undef TOOL_3_TEMP_PIN
+          #undef TOOL_3_HEATER_PIN
+          #define TOOL_3_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_3_HOTEND)
+          #define TOOL_3_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_3_HOTEND)
 
-              #if HOTENDS > 7
-                #undef TEMP_7_PIN
-                #undef HEATER_7_PIN
-                #define TEMP_7_PIN TEMP_0_PIN
-                #define HEATER_7_PIN HEATER_0_PIN
-              #endif
-            #endif
-          #endif
-        #endif
-      #endif
-    #endif
-  #endif
+          #if HOTENDS > 4
+            #undef TOOL_4_TEMP_PIN
+            #undef TOOL_4_HEATER_PIN
+            #define TOOL_4_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_4_HOTEND)
+            #define TOOL_4_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_4_HOTEND)
+
+            #if HOTENDS > 5
+              #undef TOOL_5_TEMP_PIN
+              #undef TOOL_5_HEATER_PIN
+              #define TOOL_5_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_5_HOTEND)
+              #define TOOL_5_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_5_HOTEND)
+
+              #if HOTENDS > 6
+                #undef TOOL_6_TEMP_PIN
+                #undef TOOL_6_HEATER_PIN
+                #define TOOL_6_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_6_HOTEND)
+                #define TOOL_6_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_6_HOTEND)
+
+                #if HOTENDS > 7
+                  #undef TOOL_7_TEMP_PIN
+                  #undef TOOL_7_HEATER_PIN
+                  #define TOOL_7_TEMP_PIN TOOL_n_TEMP_PIN(TOOL_7_HOTEND)
+                  #define TOOL_7_HEATER_PIN TOOL_n_HEATER_PIN(TOOL_7_HOTEND)
+                #endif  // HOTENDS > 7
+              #endif  // HOTENDS > 6
+            #endif  // HOTENDS > 5
+          #endif  // HOTENDS > 4
+        #endif  // HOTENDS > 3
+      #endif  // HOTENDS > 2
+    #endif  // HOTENDS > 1
+  #endif  // HAS_HOTENDS
 
   // Default Tool Names
   #ifndef TOOL_NAME_0
