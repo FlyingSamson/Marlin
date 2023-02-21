@@ -778,6 +778,11 @@
       #endif // MAN_ST_NUM_TOOLS > 2
     #endif // MAN_ST_NUM_TOOLS > 1
   #endif // MAN_ST_NUM_TOOLS > 0
+
+  #define NEXT_TOOLPLATE(N) ,TOOL_##N##_TOOLPLATE
+  constexpr uint8_t toolplate_map[] = { TOOL_0_TOOLPLATE REPEAT_S(1, MAN_ST_NUM_TOOLS, NEXT_TOOLPLATE) };
+  #undef NEXT_TOOLPLATE
+
   // TEMP and HEATER overrides
   #define _TOOL_n_TEMP_PIN(N) TEMP_##N##_PIN
   #define TOOL_n_TEMP_PIN(N) _TOOL_n_TEMP_PIN(N)
