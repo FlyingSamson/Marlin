@@ -243,10 +243,11 @@ constexpr pin_t sensitive_dio[] PROGMEM = {
   //
 
   // Mixing stepper, Switching stepper, or regular stepper
-  #define _E_NEEDED(N) (ENABLED(MIXING_EXTRUDER) && MIXING_STEPPERS > N) \
-                    || (HAS_SWITCHING_EXTRUDER && E_STEPPERS > N) \
-                    || (NONE(SWITCHING_EXTRUDER, MIXING_EXTRUDER) && EXTRUDERS > N)
-  #define E_NEEDED(N) _E_NEEDED(N) && TERN1(MAN_ST_SINGLE_EXTRUDER, (N) == 0)
+  #define E_NEEDED(N) (ENABLED(MIXING_EXTRUDER) && MIXING_STEPPERS > N) \
+                   || (HAS_SWITCHING_EXTRUDER && E_STEPPERS > N) \
+                   || (NONE(SWITCHING_EXTRUDER, MIXING_EXTRUDER) \
+                       && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > N) \
+                       && EXTRUDERS > N)
 
   #if E_NEEDED(0)
     E0_STEP_PIN, E0_DIR_PIN, E0_ENABLE_PIN,
@@ -380,49 +381,49 @@ constexpr pin_t sensitive_dio[] PROGMEM = {
   // Hotend Heaters and Fans
   //
 
-  #if HAS_HOTEND
+  #if HAS_HOTEND && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 0)
     HEATER_0_PIN,
     #if PIN_EXISTS(E0_AUTO_FAN)
       E0_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HAS_MULTI_HOTEND
+  #if HAS_MULTI_HOTEND && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 1)
     HEATER_1_PIN,
     #if PIN_EXISTS(E1_AUTO_FAN)
       E1_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 2
+  #if HOTENDS > 2 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 2)
     HEATER_2_PIN,
     #if PIN_EXISTS(E2_AUTO_FAN)
       E2_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 3
+  #if HOTENDS > 3 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 3)
     HEATER_3_PIN,
     #if PIN_EXISTS(E3_AUTO_FAN)
       E3_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 4
+  #if HOTENDS > 4 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 4)
     HEATER_4_PIN,
     #if PIN_EXISTS(E4_AUTO_FAN)
       E4_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 5
+  #if HOTENDS > 5 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 5)
     HEATER_5_PIN,
     #if PIN_EXISTS(E5_AUTO_FAN)
       E5_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 6
+  #if HOTENDS > 6 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 6)
     HEATER_6_PIN,
     #if PIN_EXISTS(E6_AUTO_FAN)
       E6_AUTO_FAN_PIN,
     #endif
   #endif
-  #if HOTENDS > 7
+  #if HOTENDS > 7 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 7)
     HEATER_7_PIN,
     #if PIN_EXISTS(E7_AUTO_FAN)
       E7_AUTO_FAN_PIN,
@@ -573,28 +574,28 @@ constexpr pin_t sensitive_dio[] PROGMEM = {
 };
 
 constexpr pin_t sensitive_aio[] PROGMEM = {
-  #if HAS_HOTEND
+  #if HAS_HOTEND && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 0)
     TEMP_0_PIN,
   #endif
-  #if HAS_MULTI_HOTEND
+  #if HAS_MULTI_HOTEND && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 1)
     TEMP_1_PIN,
   #endif
-  #if HOTENDS > 2
+  #if HOTENDS > 2 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 2)
     TEMP_2_PIN,
   #endif
-  #if HOTENDS > 3
+  #if HOTENDS > 3 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 3)
     TEMP_3_PIN,
   #endif
-  #if HOTENDS > 4
+  #if HOTENDS > 4 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 4)
     TEMP_4_PIN,
   #endif
-  #if HOTENDS > 5
+  #if HOTENDS > 5 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 5)
     TEMP_5_PIN,
   #endif
-  #if HOTENDS > 6
+  #if HOTENDS > 6 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 6)
     TEMP_6_PIN,
   #endif
-  #if HOTENDS > 7
+  #if HOTENDS > 7 && TERN1(MANUAL_SWITCHING_TOOLHEAD, E_DRIVERS > 7)
     TEMP_7_PIN,
   #endif
   #if TEMP_SENSOR_BED && PINS_EXIST(TEMP_BED, HEATER_BED)
