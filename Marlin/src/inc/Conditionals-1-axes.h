@@ -154,7 +154,6 @@
 #elif ENABLED(MANUAL_SWITCHING_TOOLHEAD)
 
   // Multiple hotends and/or other tools, using the same electrical connections.
-  // All hotends will use *_0_PIN for heaters/sensors.
   #define HAS_TOOL_OFFSETS 1
   #define HAS_MULTI_EXTRUDER 1 // ... what about 1 hotend?
   #define NUM_TOOLS MAN_ST_NUM_TOOLS
@@ -182,7 +181,7 @@
   #define TOOLHEAD_LOOP() for (uint8_t e = 0; e < MAN_ST_NUM_TOOLS; e++)  // Stand-in for HOTEND_LOOP()
 
   // Determine the number of hotend tools based on defined temp sensors
-  #define _HOTEND_TEST(P) TEMP_SENSOR_##P != 0 && MAN_ST_NUM_TOOLS > P
+  #define _HOTEND_TEST(P) TEMP_SENSOR_##P != 0
   #if _HOTEND_TEST(1)
     #define STM_HAS_MULTI_HOTEND 1
   #endif

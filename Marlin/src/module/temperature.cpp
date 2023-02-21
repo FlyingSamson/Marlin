@@ -1820,7 +1820,7 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
 
   void Temperature::manage_hotends(const millis_t &ms) {
     HOTEND_LOOP() {
-      if (TERN0(MANUAL_SWITCHING_TOOLHEAD, active_extruder != e)) continue;
+      if (TERN0(MANUAL_SWITCHING_TOOLHEAD, toolplate_map[e] != toolplate_map[active_extruder])) continue;
 
       #if ENABLED(THERMAL_PROTECTION_HOTENDS)
         if (TERN1(MANUAL_SWITCHING_TOOLHEAD, ms_since_tool_change(ms) > 100)) {
@@ -2972,31 +2972,31 @@ void Temperature::init() {
 
   #if HAS_HEATER_0
     #ifdef BOARD_OPENDRAIN_MOSFETS
-      OUT_WRITE_OD(HEATER_0_PIN, ENABLED(HEATER_0_INVERTING));
+      OUT_WRITE_OD(TOOL_0_HEATER_PIN, ENABLED(HEATER_0_INVERTING));
     #else
-      OUT_WRITE(HEATER_0_PIN, ENABLED(HEATER_0_INVERTING));
+      OUT_WRITE(TOOL_0_HEATER_PIN, ENABLED(HEATER_0_INVERTING));
     #endif
   #endif
   #if HAS_HEATER_1
-    OUT_WRITE(HEATER_1_PIN, ENABLED(HEATER_1_INVERTING));
+    OUT_WRITE(TOOL_1_HEATER_PIN, ENABLED(HEATER_1_INVERTING));
   #endif
   #if HAS_HEATER_2
-    OUT_WRITE(HEATER_2_PIN, ENABLED(HEATER_2_INVERTING));
+    OUT_WRITE(TOOL_2_HEATER_PIN, ENABLED(HEATER_2_INVERTING));
   #endif
   #if HAS_HEATER_3
-    OUT_WRITE(HEATER_3_PIN, ENABLED(HEATER_3_INVERTING));
+    OUT_WRITE(TOOL_3_HEATER_PIN, ENABLED(HEATER_3_INVERTING));
   #endif
   #if HAS_HEATER_4
-    OUT_WRITE(HEATER_4_PIN, ENABLED(HEATER_4_INVERTING));
+    OUT_WRITE(TOOL_4_HEATER_PIN, ENABLED(HEATER_4_INVERTING));
   #endif
   #if HAS_HEATER_5
-    OUT_WRITE(HEATER_5_PIN, ENABLED(HEATER_5_INVERTING));
+    OUT_WRITE(TOOL_5_HEATER_PIN, ENABLED(HEATER_5_INVERTING));
   #endif
   #if HAS_HEATER_6
-    OUT_WRITE(HEATER_6_PIN, ENABLED(HEATER_6_INVERTING));
+    OUT_WRITE(TOOL_6_HEATER_PIN, ENABLED(HEATER_6_INVERTING));
   #endif
   #if HAS_HEATER_7
-    OUT_WRITE(HEATER_7_PIN, ENABLED(HEATER_7_INVERTING));
+    OUT_WRITE(TOOL_7_HEATER_PIN, ENABLED(HEATER_7_INVERTING));
   #endif
 
   #if HAS_HEATED_BED
@@ -3964,11 +3964,8 @@ void Temperature::isr() {
 
   #define WRITE_FAN(n, v) WRITE(FAN##n##_PIN, (v) ^ ENABLED(FAN_INVERTING))
 
-  #if ENABLED(STM_HAS_MULTI_HOTEND)
-    #define NUM_PWM_E 1
-  #else
-    #define NUM_PWM_E HOTENDS
-  #endif
+  #define _SKIP_INACTIVE_HOTENDS(N) TERN_(MANUAL_SWITCHING_TOOLHEAD, if(toolplate_map[N] != toolplate_map[active_extruder]) break;)
+
 
   #if DISABLED(SLOW_PWM_HEATERS)
 
@@ -3987,8 +3984,11 @@ void Temperature::isr() {
       pwm_count_tmp -= 127;
 
       #if HAS_HOTEND
-        #define _PWM_MOD_E(N) _PWM_MOD(N,soft_pwm_hotend[N],temp_hotend[N]);
-        REPEAT(NUM_PWM_E, _PWM_MOD_E);
+        #define _PWM_MOD_E(N) do{                        \
+          _SKIP_INACTIVE_HOTENDS(N)                      \
+          _PWM_MOD(N,soft_pwm_hotend[N],temp_hotend[N]); \
+        }while(0);
+        REPEAT(HOTENDS, _PWM_MOD_E);
       #endif
 
       #if HAS_HEATED_BED
@@ -4047,8 +4047,11 @@ void Temperature::isr() {
     else {
       #define _PWM_LOW(N,S) do{ if (S.count <= pwm_count_tmp) WRITE_HEATER_##N(LOW); }while(0)
       #if HAS_HOTEND
-        #define _PWM_LOW_E(N) _PWM_LOW(N, soft_pwm_hotend[N]);
-        REPEAT(NUM_PWM_E, _PWM_LOW_E);
+        #define _PWM_LOW_E(N) do{          \
+          _SKIP_INACTIVE_HOTENDS(N)        \
+          _PWM_LOW(N, soft_pwm_hotend[N]); \
+        }while(0);
+        REPEAT(HOTENDS, _PWM_LOW_E);
       #endif
 
       #if HAS_HEATED_BED
@@ -4120,8 +4123,11 @@ void Temperature::isr() {
     if (slow_pwm_count == 0) {
 
       #if HAS_HOTEND
-        #define _SLOW_PWM_E(N) _SLOW_PWM(N, soft_pwm_hotend[N], temp_hotend[N]);
-        REPEAT(NUM_PWM_E, _SLOW_PWM_E);
+        #define _SLOW_PWM_E(N) do{                          \
+          _SKIP_INACTIVE_HOTENDS(N) \
+          _SLOW_PWM(N, soft_pwm_hotend[N], temp_hotend[N]); \
+        }while(0);
+        REPEAT(HOTENDS, _SLOW_PWM_E);
       #endif
 
       #if HAS_HEATED_BED
@@ -4139,8 +4145,11 @@ void Temperature::isr() {
     } // slow_pwm_count == 0
 
     #if HAS_HOTEND
-      #define _PWM_OFF_E(N) _PWM_OFF(N, soft_pwm_hotend[N]);
-      REPEAT(NUM_PWM_E, _PWM_OFF_E);
+      #define _PWM_OFF_E(N) do{          \
+        _SKIP_INACTIVE_HOTENDS(N) \
+        _PWM_OFF(N, soft_pwm_hotend[N]); \
+      }while(0);
+      REPEAT(HOTENDS, _PWM_OFF_E);
     #endif
 
     #if HAS_HEATED_BED
