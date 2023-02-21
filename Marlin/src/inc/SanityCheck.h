@@ -1062,6 +1062,28 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
         #endif  // HOTENDS > 2
       #endif  // HOTENDS > 1
     #endif  // HOTENDS > 0
+
+    // Check uniqueness of pin redirections per toolplate
+    #define NEXT_TOOL_E_STEPPER(N) ,TOOL_##N##_E_STEPPER
+    #define NEXT_TOOL_RUNOUT(N) ,TOOL_##N##_RUNOUT
+    #define NEXT_TOOL_HOTEND(N) ,TOOL_##N##_HOTEND
+
+    constexpr uint8_t e_stepper_redirections[] = {TOOL_0_E_STEPPER REPEAT_S(1, HOTENDS, NEXT_TOOL_E_STEPPER)};
+    constexpr uint8_t runout_redirections[] = {TOOL_0_RUNOUT REPEAT_S(1, HOTENDS, NEXT_TOOL_RUNOUT)};
+    constexpr uint8_t hotend_redirections[] = {TOOL_0_HOTEND REPEAT_S(1, HOTENDS, NEXT_TOOL_HOTEND)};
+
+    // Count number of elements in "redirections" with value "value" on toolplate with index "toolplate_idx"
+    constexpr int count_redirections(const uint8_t* redirections, uint8_t value, size_t toolplate_idx, size_t start, size_t post_end) {
+      return start == post_end ? 0 : ((toolplate_map[start] == toolplate_idx && redirections[start] == value ? 1 : 0)
+                                      + count_redirections(redirections, value, toolplate_idx, start+1, post_end));
+    }
+    #define _TEST_REDIRECTIONS_UNIQUE(N, L, T) static_assert( \
+      count_redirections(L, L[N], TOOL_##N##_TOOLPLATE, 0, COUNT(L)) == 1, "The values of " T " must be unique for each tool on toolplate with index " STRINGIFY(TOOL_##N##_TOOLPLATE));
+    #define TEST_REDIRECTIONS_UNIQUE(L, T) REPEAT2(HOTENDS, _TEST_REDIRECTIONS_UNIQUE, L, T)
+
+    TEST_REDIRECTIONS_UNIQUE(e_stepper_redirections, "TOOL_n_E_STEPPER")
+    TEST_REDIRECTIONS_UNIQUE(runout_redirections, "TOOL_n_RUNOUT")
+    TEST_REDIRECTIONS_UNIQUE(hotend_redirections, "TOOL_n_HOTEND")
   #endif
 
   #if MAN_ST_NUM_TOOLS < 8
