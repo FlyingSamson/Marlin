@@ -517,8 +517,8 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "FILAMENT_RUNOUT_SENSOR requires FIL_RUNOUT_PIN."
   #elif (HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3) && NUM_RUNOUT_SENSORS != 1
       #error "NUM_RUNOUT_SENSORS must be 1 with MMU2 / MMU2S / MMU3."
-  #elif NUM_RUNOUT_SENSORS != 1 && NUM_RUNOUT_SENSORS != E_STEPPERS
-    #error "NUM_RUNOUT_SENSORS must be either 1 or number of E steppers."
+  #elif NUM_RUNOUT_SENSORS != 1 && NUM_RUNOUT_SENSORS != E_STEPPERS && TERN1(MANUAL_SWITCHING_TOOLHEAD, NUM_RUNOUT_SENSORS != E_DRIVERS)
+    #error "NUM_RUNOUT_SENSORS must be either 1 or number of E steppers/drivers."
   #elif NUM_RUNOUT_SENSORS >= 8 && !PIN_EXISTS(FIL_RUNOUT8)
     #error "FIL_RUNOUT8_PIN is required with NUM_RUNOUT_SENSORS >= 8."
   #elif NUM_RUNOUT_SENSORS >= 7 && !PIN_EXISTS(FIL_RUNOUT7)
@@ -904,8 +904,10 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "MANUAL_SWITCHING_TOOLHEAD requires MAN_ST_NUM_TOOLS >= 2."
   #elif MAN_ST_NUM_TOOLS > 8
     #error "MAN_ST_NUM_TOOLS can not be more than 8."
-  #elif E_STEPPERS != 1 && E_STEPPERS != HOTENDS
-    #error "MANUAL_SWITCHING_TOOLHEAD requires either matching hotend/EXTRUDER count, or just one EXTRUDER."
+  #elif HOTENDS > MAN_ST_NUM_TOOLS
+    #error "MAN_ST_NUM_TOOLS must encompass all hotend tools (i.e., defined by TEMP_SENSOR_n)"
+  #elif E_STEPPERS != HOTENDS
+    #error "MANUAL_SWITCHING_TOOLHEAD requires matching hotend/EXTRUDER"
   #elif DISABLED(ADVANCED_PAUSE_FEATURE)
     #error "MANUAL_SWITCHING_TOOLHEAD requires ADVANCED_PAUSE_FEATURE."
   #endif
