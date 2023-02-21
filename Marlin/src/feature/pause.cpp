@@ -222,7 +222,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
       #if ALL(HAS_FILAMENT_SENSOR, FILAMENT_CHANGE_RESUME_ON_INSERT)
         #if MULTI_FILAMENT_SENSOR
           #define _CASE_INSERTED(N) case N-1: if (READ(FIL_RUNOUT##N##_PIN) != FIL_RUNOUT##N##_STATE) wait_for_user = false; break;
-          switch (active_extruder) {
+          switch (TERN(MANUAL_SWITCHING_TOOLHEAD, active_runout_sensor, active_extruder)) {
             REPEAT_1(NUM_RUNOUT_SENSORS, _CASE_INSERTED)
           }
         #else

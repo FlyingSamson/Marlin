@@ -61,6 +61,15 @@ typedef Flags<
           #endif
         > runout_flags_t;
 
+#if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
+  // the currently active runout sensor, i.e., the one used by the currently active tool (zero based)
+  #if MULTI_FILAMENT_SENSOR
+    extern uint8_t active_runout_sensor;
+  #else
+    constexpr uint8_t active_runout_sensor = 0;
+  #endif
+#endif
+
 void event_filament_runout(const uint8_t extruder);
 inline bool should_monitor_runout() { return did_pause_print || printingIsActive(); }
 
@@ -150,7 +159,7 @@ class TFilamentMonitor : public FilamentMonitorBase {
             uint8_t extruder = 0;
             if (ran_out) while (!runout_flags.test(extruder)) extruder++;
           #else
-            const bool ran_out = runout_flags[active_extruder];  // suppress non active extruders
+            const bool ran_out = runout_flags[TERN(MANUAL_SWITCHING_TOOLHEAD, active_runout_sensor, active_extruder)];  // suppress non active extruders
             uint8_t extruder = active_extruder;
           #endif
         #else

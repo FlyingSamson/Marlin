@@ -68,6 +68,10 @@
   #include "stepper.h"
 #endif
 
+#if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
+  #include "../feature/runout.h"
+#endif
+
 #if ANY(SWITCHING_EXTRUDER, SWITCHING_NOZZLE, SERVO_SWITCHING_TOOLHEAD)
   #include "servo.h"
 #endif
@@ -400,13 +404,39 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
 
   millis_t last_tool_change = 0;
 
+  /**
+   * Get the runout sensor of tool "e" (or the active extruder if not provided)
+   */
+  inline uint8_t lookup_runout_sensor(uint8_t e = active_extruder) {
+    uint8_t runout_sensor;
+    #define _CASE_TOOL_INSERTED(N) case N: runout_sensor = TOOL_##N##_RUNOUT - 1; break;
+    switch(e) {
+      REPEAT(HOTENDS, _CASE_TOOL_INSERTED)
+      default: break;
+    }
+    #undef _CASE_TOOL_INSERTED
+    return runout_sensor;
+  }
+
+  void mst_load_tool_settings() {
+    // lookup runout sensor for active tool
+    #if MULTI_FILAMENT_SENSOR
+      active_runout_sensor = lookup_runout_sensor();
+    #endif
+  }
+
   void mst_init() {
-    TERN_(MAN_ST_EEPROM_STORAGE, active_extruder = toolchange_settings.selected_tool); // set active_extruder on first load
+    #if ENABLED(MAN_ST_EEPROM_STORAGE)
+      // set active_extruder on first load
+      active_extruder = toolchange_settings.selected_tool;
+    #endif
+    mst_load_tool_settings();
   }
 
   inline void mst_set_new_tool(const uint8_t new_tool) {
     thermalManager.temp_hotend[new_tool].reset();
     active_extruder = new_tool;
+    mst_load_tool_settings();
     toolchange_settings.selected_tool = new_tool;
 
     // allow temperature readings to stabilize; 1khz, OVERSAMPLENR*4 samples
