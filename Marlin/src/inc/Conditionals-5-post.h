@@ -2806,28 +2806,30 @@
 // ADC Temp Sensors (Thermistor or Thermocouple with amplifier ADC interface)
 //
 #define HAS_ADC_TEST(P) (TEMP_SENSOR(P) && PIN_EXISTS(TEMP_##P) && !TEMP_SENSOR_IS_MAX_TC(P) && !TEMP_SENSOR_##P##_IS_DUMMY)
-#if HOTENDS > 0 && HAS_ADC_TEST(0)
+#define HAS_ADC_TOOL_TEST(P) (TEMP_SENSOR(P) && PIN_EXISTS(TOOL_##P##_TEMP) && !TEMP_SENSOR_IS_MAX_TC(P) && !TEMP_SENSOR_##P##_IS_DUMMY)
+
+#if HOTENDS > 0 && HAS_ADC_TOOL_TEST(0)
   #define HAS_TEMP_ADC_0 1
 #endif
-#if HOTENDS > 1 && HAS_ADC_TEST(1)
+#if HOTENDS > 1 && HAS_ADC_TOOL_TEST(1)
   #define HAS_TEMP_ADC_1 1
 #endif
-#if HOTENDS > 2 && HAS_ADC_TEST(2)
+#if HOTENDS > 2 && HAS_ADC_TOOL_TEST(2)
   #define HAS_TEMP_ADC_2 1
 #endif
-#if HOTENDS > 3 && HAS_ADC_TEST(3)
+#if HOTENDS > 3 && HAS_ADC_TOOL_TEST(3)
   #define HAS_TEMP_ADC_3 1
 #endif
-#if HOTENDS > 4 && HAS_ADC_TEST(4)
+#if HOTENDS > 4 && HAS_ADC_TOOL_TEST(4)
   #define HAS_TEMP_ADC_4 1
 #endif
-#if HOTENDS > 5 && HAS_ADC_TEST(5)
+#if HOTENDS > 5 && HAS_ADC_TOOL_TEST(5)
   #define HAS_TEMP_ADC_5 1
 #endif
-#if HOTENDS > 6 && HAS_ADC_TEST(6)
+#if HOTENDS > 6 && HAS_ADC_TOOL_TEST(6)
   #define HAS_TEMP_ADC_6 1
 #endif
-#if HOTENDS > 7 && HAS_ADC_TEST(7)
+#if HOTENDS > 7 && HAS_ADC_TOOL_TEST(7)
   #define HAS_TEMP_ADC_7 1
 #endif
 #if TEMP_SENSOR_BED
