@@ -2409,12 +2409,13 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
     #error "TEMP_SENSOR_0 can't use Soc temperature sensor."
   #elif TEMP_SENSOR_0 == 0
     #error "TEMP_SENSOR_0 is required with 1 or more HOTENDS."
-  #elif !ANY_PIN(TEMP_0, TEMP_0_CS) && !TEMP_SENSOR_0_IS_DUMMY
+  #elif !ANY_PIN(TOOL_0_TEMP, TEMP_0_CS) && !TEMP_SENSOR_0_IS_DUMMY
     #error "TEMP_0_PIN or TEMP_0_CS_PIN not defined for this board."
   #endif
-  #if ANY(HAS_MULTI_HOTEND, HEATERS_PARALLEL) && NONE(HAS_HEATER_1, MANUAL_SWITCHING_TOOLHEAD)
+  #if ANY(HAS_MULTI_HOTEND, HEATERS_PARALLEL) && !HAS_HEATER_1
     #error "HEATER_1_PIN is not defined. TEMP_SENSOR_1 might not be set, or the board (not EEB / EEF?) doesn't define a pin."
   #endif
+
   #if HAS_MULTI_HOTEND
     #if TEMP_SENSOR_IS_MAX_TC(1) && !PIN_EXISTS(TEMP_1_CS)
       #error "TEMP_SENSOR_1 MAX thermocouple requires TEMP_1_CS_PIN."
@@ -2422,7 +2423,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
       #error "TEMP_SENSOR_1 can't use Soc temperature sensor."
     #elif TEMP_SENSOR_1 == 0
       #error "TEMP_SENSOR_1 is required with 2 or more HOTENDS."
-    #elif !ANY_PIN(TEMP_1, TEMP_1_CS) && !TEMP_SENSOR_1_IS_DUMMY
+    #elif !ANY_PIN(TOOL_1_TEMP, TEMP_1_CS) && !TEMP_SENSOR_1_IS_DUMMY
       #error "TEMP_1_PIN or TEMP_1_CS_PIN not defined for this board."
     #endif
     #if HOTENDS > 2
@@ -2434,7 +2435,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
         #error "TEMP_SENSOR_2 is required with 3 or more HOTENDS."
       #elif !HAS_HEATER_2
         #error "HEATER_2_PIN not defined for this board."
-      #elif !ANY_PIN(TEMP_2, TEMP_2_CS) && !TEMP_SENSOR_2_IS_DUMMY
+      #elif !ANY_PIN(TOOL_2_TEMP, TEMP_2_CS) && !TEMP_SENSOR_2_IS_DUMMY
         #error "TEMP_2_PIN or TEMP_2_CS_PIN not defined for this board."
       #endif
       #if HOTENDS > 3
@@ -2444,7 +2445,7 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
           #error "TEMP_SENSOR_3 is required with 4 or more HOTENDS."
         #elif !HAS_HEATER_3
           #error "HEATER_3_PIN not defined for this board."
-        #elif !PIN_EXISTS(TEMP_3) && !TEMP_SENSOR_3_IS_DUMMY
+        #elif !PIN_EXISTS(TOOL_3_TEMP) && !TEMP_SENSOR_3_IS_DUMMY
           #error "TEMP_3_PIN not defined for this board."
         #endif
         #if HOTENDS > 4
@@ -2454,37 +2455,37 @@ static_assert(NUM_SERVOS <= NUM_SERVO_PLUGS, "NUM_SERVOS (or some servo index) i
             #error "TEMP_SENSOR_4 is required with 5 or more HOTENDS."
           #elif !HAS_HEATER_4
             #error "HEATER_4_PIN not defined for this board."
-          #elif !PIN_EXISTS(TEMP_4) && !TEMP_SENSOR_4_IS_DUMMY
+          #elif !PIN_EXISTS(TOOL_4_TEMP) && !TEMP_SENSOR_4_IS_DUMMY
             #error "TEMP_4_PIN not defined for this board."
           #endif
           #if HOTENDS > 5
             #if TEMP_SENSOR_5 == 100
               #error "TEMP_SENSOR_5 can't use Soc temperature sensor."
             #elif TEMP_SENSOR_5 == 0
-              #error "TEMP_SENSOR_5 is required with 6 HOTENDS."
+              #error "TEMP_SENSOR_5 is required with 6 or more HOTENDS."
             #elif !HAS_HEATER_5
               #error "HEATER_5_PIN not defined for this board."
-            #elif !PIN_EXISTS(TEMP_5) && !TEMP_SENSOR_5_IS_DUMMY
+            #elif !PIN_EXISTS(TOOL_5_TEMP) && !TEMP_SENSOR_5_IS_DUMMY
               #error "TEMP_5_PIN not defined for this board."
             #endif
             #if HOTENDS > 6
               #if TEMP_SENSOR_6 == 100
                 #error "TEMP_SENSOR_6 can't use Soc temperature sensor."
               #elif TEMP_SENSOR_6 == 0
-                #error "TEMP_SENSOR_6 is required with 6 HOTENDS."
+                #error "TEMP_SENSOR_6 is required with 7 or more HOTENDS."
               #elif !HAS_HEATER_6
                 #error "HEATER_6_PIN not defined for this board."
-              #elif !PIN_EXISTS(TEMP_6) && !TEMP_SENSOR_6_IS_DUMMY
+              #elif !PIN_EXISTS(TOOL_6_TEMP) && !TEMP_SENSOR_6_IS_DUMMY
                 #error "TEMP_6_PIN not defined for this board."
               #endif
               #if HOTENDS > 7
                 #if TEMP_SENSOR_7 == 100
                   #error "TEMP_SENSOR_7 can't use Soc temperature sensor."
                 #elif TEMP_SENSOR_7 == 0
-                  #error "TEMP_SENSOR_7 is required with 7 HOTENDS."
+                  #error "TEMP_SENSOR_7 is required with 8 HOTENDS."
                 #elif !HAS_HEATER_7
                   #error "HEATER_7_PIN not defined for this board."
-                #elif !PIN_EXISTS(TEMP_7) && !TEMP_SENSOR_7_IS_DUMMY
+                #elif !PIN_EXISTS(TOOL_7_TEMP) && !TEMP_SENSOR_7_IS_DUMMY
                   #error "TEMP_7_PIN not defined for this board."
                 #endif
               #endif // HOTENDS > 7
