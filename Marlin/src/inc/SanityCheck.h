@@ -960,6 +960,108 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #if PIN_EXISTS(HEATER_7)
       _TEST_HEATER_INVERTING(7);
     #endif
+
+    // Check hotend tool definitions
+    #define TOOL_n_E_STEPPER_CHECK(N) WITHIN(TOOL_##N##_E_STEPPER, 0, DECREMENT(E_DRIVERS))
+    #define TOOL_n_HOTEND_CHECK(N) WITHIN(TOOL_##N##_HOTEND, 0, DECREMENT(E_DRIVERS))
+    #define TOOL_n_RUNOUT_CHECK(N) WITHIN(TOOL_##N##_RUNOUT, 1, NUM_RUNOUT_SENSORS)
+
+    #if HOTENDS > 0
+      #if !TOOL_n_E_STEPPER_CHECK(0)
+        #error "TOOL_0_E_STEPPER must be within 0 and E_DRIVERS-1"
+      #endif
+      #if !TOOL_n_HOTEND_CHECK(0)
+        #error "TOOL_0_HOTEND must be within 0 and E_DRIVERS-1"
+      #endif
+      #if !TOOL_n_RUNOUT_CHECK(0)
+        #error "TOOL_0_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+      #endif
+
+      #if HOTENDS > 1
+        #if !TOOL_n_E_STEPPER_CHECK(1)
+          #error "TOOL_1_E_STEPPER must be within 0 and E_DRIVERS-1"
+        #endif
+        #if !TOOL_n_HOTEND_CHECK(1)
+          #error "TOOL_1_HOTEND must be within 0 and E_DRIVERS-1"
+        #endif
+        #if !TOOL_n_RUNOUT_CHECK(1)
+          #error "TOOL_1_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+        #endif
+
+        #if HOTENDS > 2
+          #if !TOOL_n_E_STEPPER_CHECK(2)
+            #error "TOOL_2_E_STEPPER must be within 0 and E_DRIVERS-1"
+          #endif
+          #if !TOOL_n_HOTEND_CHECK(2)
+            #error "TOOL_2_HOTEND must be within 0 and E_DRIVERS-1"
+          #endif
+          #if !TOOL_n_RUNOUT_CHECK(2)
+            #error "TOOL_2_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+          #endif
+
+          #if HOTENDS > 3
+            #if !TOOL_n_E_STEPPER_CHECK(3)
+              #error "TOOL_3_E_STEPPER must be within 0 and E_DRIVERS-1"
+            #endif
+            #if !TOOL_n_HOTEND_CHECK(3)
+              #error "TOOL_3_HOTEND must be within 0 and E_DRIVERS-1"
+            #endif
+            #if !TOOL_n_RUNOUT_CHECK(3)
+              #error "TOOL_3_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+            #endif
+
+            #if HOTENDS > 4
+              #if !TOOL_n_E_STEPPER_CHECK(4)
+                #error "TOOL_4_E_STEPPER must be within 0 and E_DRIVERS-1"
+              #endif
+              #if !TOOL_n_HOTEND_CHECK(4)
+                #error "TOOL_4_HOTEND must be within 0 and E_DRIVERS-1"
+              #endif
+              #if !TOOL_n_RUNOUT_CHECK(4)
+                #error "TOOL_4_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+              #endif
+
+              #if HOTENDS > 5
+                #if !TOOL_n_E_STEPPER_CHECK(5)
+                  #error "TOOL_5_E_STEPPER must be within 0 and E_DRIVERS-1"
+                #endif
+                #if !TOOL_n_HOTEND_CHECK(5)
+                  #error "TOOL_5_HOTEND must be within 0 and E_DRIVERS-1"
+                #endif
+                #if !TOOL_n_RUNOUT_CHECK(5)
+                  #error "TOOL_5_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+                #endif
+
+                #if HOTENDS > 6
+                  #if !TOOL_n_E_STEPPER_CHECK(6)
+                    #error "TOOL_6_E_STEPPER must be within 0 and E_DRIVERS-1"
+                  #endif
+                  #if !TOOL_n_HOTEND_CHECK(6)
+                    #error "TOOL_6_HOTEND must be within 0 and E_DRIVERS-1"
+                  #endif
+                  #if !TOOL_n_RUNOUT_CHECK(6)
+                    #error "TOOL_6_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+                  #endif
+
+                  #if HOTENDS > 7
+                    #if !TOOL_n_E_STEPPER_CHECK(7)
+                      #error "TOOL_7_E_STEPPER must be within 0 and E_DRIVERS-1"
+                    #endif
+                    #if !TOOL_n_HOTEND_CHECK(7)
+                      #error "TOOL_7_HOTEND must be within 0 and E_DRIVERS-1"
+                    #endif
+                    #if !TOOL_n_RUNOUT_CHECK(7)
+                      #error "TOOL_7_RUNOUT must be within 1 and NUM_RUNOUT_SENSORS"
+                    #endif
+
+                  #endif  // HOTENDS > 7
+                #endif  // HOTENDS > 6
+              #endif  // HOTENDS > 5
+            #endif  // HOTENDS > 4
+          #endif  // HOTENDS > 3
+        #endif  // HOTENDS > 2
+      #endif  // HOTENDS > 1
+    #endif  // HOTENDS > 0
   #endif
 
   #if MAN_ST_NUM_TOOLS < 8
