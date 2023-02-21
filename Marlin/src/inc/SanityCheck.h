@@ -920,6 +920,48 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "MANUAL_SWITCHING_TOOLHEAD currently does not support MIXING_EXTRUDER."
   #endif
 
+  #if HAS_HOTENDS
+    // Disallow varying value for HEATER_n_INVERTING for heaters using the same pin on the board to avoid savety hazard during startup
+    #define NEXT_HEATER_INVERTING(N) ,HEATER_##N##_INVERTING
+    #define NEXT_TOOL_HEATER_PIN(N) ,TOOL_##N##_HEATER_PIN
+    constexpr bool heater_inverting[] = { HEATER_0_INVERTING REPEAT_S(1, HOTENDS, NEXT_HEATER_INVERTING) };
+    constexpr uint8_t heater_pins[] = { TOOL_0_HEATER_PIN REPEAT_S(1, HOTENDS, NEXT_TOOL_HEATER_PIN) };
+
+    // count number of heaters connected to "pin" that have "inv" as inversion value
+    constexpr int count_inverted(uint8_t pin, bool inv, size_t start, size_t post_end) {
+      return start == post_end ? 0 : ((heater_pins[start] == pin && heater_inverting[start] == inv ? 1 : 0) + count_inverted(pin, inv, start + 1, post_end));
+    }
+    #define _TEST_HEATER_INVERTING(N) static_assert( \
+      count_inverted(HEATER_##N##_PIN, true, 0, COUNT(heater_inverting)) == 0 || count_inverted(HEATER_##N##_PIN, false, 0, COUNT(heater_inverting)) == 0, \
+      "All tools connected to the same heater pin on the board must specify the same value for HEATER_n_INVERTING")
+
+    // apply test for all heaters pins of the board
+    #if PIN_EXISTS(HEATER_0)
+      _TEST_HEATER_INVERTING(0);
+    #endif
+    #if PIN_EXISTS(HEATER_1)
+      _TEST_HEATER_INVERTING(1);
+    #endif
+    #if PIN_EXISTS(HEATER_2)
+      _TEST_HEATER_INVERTING(2);
+    #endif
+    #if PIN_EXISTS(HEATER_3)
+      _TEST_HEATER_INVERTING(3);
+    #endif
+    #if PIN_EXISTS(HEATER_4)
+      _TEST_HEATER_INVERTING(4);
+    #endif
+    #if PIN_EXISTS(HEATER_5)
+      _TEST_HEATER_INVERTING(5);
+    #endif
+    #if PIN_EXISTS(HEATER_6)
+      _TEST_HEATER_INVERTING(6);
+    #endif
+    #if PIN_EXISTS(HEATER_7)
+      _TEST_HEATER_INVERTING(7);
+    #endif
+  #endif
+
   #if MAN_ST_NUM_TOOLS < 8
     #undef TOOL_NAME_7
   #endif
