@@ -2329,7 +2329,7 @@ void Temperature::task() {
     if (m == l || m == r) return celsius_t(pgm_read_word(&TBL[LEN-1].celsius)); \
     raw_adc_t v00 = pgm_read_word(&TBL[m-1].value),                       \
               v10 = pgm_read_word(&TBL[m-0].value);                       \
-         if (raw < v00) r = m;                                            \
+    if (raw < v00) r = m;                                                 \
     else if (raw > v10) l = m;                                            \
     else {                                                                \
       const celsius_t v01 = celsius_t(pgm_read_word(&TBL[m-1].celsius)),  \
@@ -2759,7 +2759,8 @@ void Temperature::updateTemperaturesFromRawValues() {
   #endif
 
   #if HAS_HOTEND
-    HOTEND_LOOP() temp_hotend[e].celsius = analog_to_celsius_hotend(temp_hotend[e].getraw(), e);
+    HOTEND_LOOP() temp_hotend[e].celsius =
+      TERN_(MANUAL_SWITCHING_TOOLHEAD, (toolplate_map[e] != toolplate_map[active_extruder]) ? temp_range[e].mintemp :) analog_to_celsius_hotend(temp_hotend[e].getraw(), e);
   #endif
 
   TERN_(HAS_HEATED_BED,     temp_bed.celsius       = analog_to_celsius_bed(temp_bed.getraw()));
@@ -2782,7 +2783,7 @@ void Temperature::updateTemperaturesFromRawValues() {
     #endif
 
     HOTEND_LOOP() {
-      if (TERN0(STM_HAS_MULTI_HOTEND, active_extruder != e)) continue; // Only act on the active tool in manual switching mode
+      if (TERN0(MANUAL_SWITCHING_TOOLHEAD, toolplate_map[e] != toolplate_map[active_extruder])) continue; // Only act on the active tool in manual switching mode
       const raw_adc_t r = temp_hotend[e].getraw();
       const bool neg = temp_dir[e] < 0, pos = temp_dir[e] > 0;
       if (TERN1(MANUAL_SWITCHING_TOOLHEAD, ms_since_tc > 100) && ((neg && r < temp_range[e].raw_max) || (pos && r > temp_range[e].raw_max)))
@@ -3807,12 +3808,13 @@ void Temperature::update_raw_temperatures() {
     temp_bed.update();
   #endif
 
-  TERN_(HAS_TEMP_ADC_2,       temp_hotend[2].update());
-  TERN_(HAS_TEMP_ADC_3,       temp_hotend[3].update());
-  TERN_(HAS_TEMP_ADC_4,       temp_hotend[4].update());
-  TERN_(HAS_TEMP_ADC_5,       temp_hotend[5].update());
-  TERN_(HAS_TEMP_ADC_6,       temp_hotend[6].update());
-  TERN_(HAS_TEMP_ADC_7,       temp_hotend[7].update());
+  TERN_(HAS_TEMP_ADC_2, temp_hotend[2].update());
+  TERN_(HAS_TEMP_ADC_3, temp_hotend[3].update());
+  TERN_(HAS_TEMP_ADC_4, temp_hotend[4].update());
+  TERN_(HAS_TEMP_ADC_5, temp_hotend[5].update());
+  TERN_(HAS_TEMP_ADC_6, temp_hotend[6].update());
+  TERN_(HAS_TEMP_ADC_7, temp_hotend[7].update());
+
   TERN_(HAS_TEMP_ADC_CHAMBER, temp_chamber.update());
   TERN_(HAS_TEMP_ADC_PROBE,   temp_probe.update());
   TERN_(HAS_TEMP_ADC_COOLER,  temp_cooler.update());
@@ -4293,7 +4295,7 @@ void Temperature::isr() {
       break;
 
     #if HAS_TEMP_ADC_0
-      case PrepareTemp_0: hal.adc_start(TEMP_0_PIN); break;
+      case PrepareTemp_0: hal.adc_start(TOOL_0_TEMP_PIN); break;
       case MeasureTemp_0: ACCUMULATE_ADC(temp_hotend[0]); break;
     #endif
 
@@ -4333,37 +4335,37 @@ void Temperature::isr() {
     #endif
 
     #if HAS_TEMP_ADC_1
-      case PrepareTemp_1: hal.adc_start(TEMP_1_PIN); break;
+      case PrepareTemp_1: hal.adc_start(TOOL_1_TEMP_PIN); break;
       case MeasureTemp_1: ACCUMULATE_ADC(temp_hotend[1]); break;
     #endif
 
     #if HAS_TEMP_ADC_2
-      case PrepareTemp_2: hal.adc_start(TEMP_2_PIN); break;
+      case PrepareTemp_2: hal.adc_start(TOOL_2_TEMP_PIN); break;
       case MeasureTemp_2: ACCUMULATE_ADC(temp_hotend[2]); break;
     #endif
 
     #if HAS_TEMP_ADC_3
-      case PrepareTemp_3: hal.adc_start(TEMP_3_PIN); break;
+      case PrepareTemp_3: hal.adc_start(TOOL_3_TEMP_PIN); break;
       case MeasureTemp_3: ACCUMULATE_ADC(temp_hotend[3]); break;
     #endif
 
     #if HAS_TEMP_ADC_4
-      case PrepareTemp_4: hal.adc_start(TEMP_4_PIN); break;
+      case PrepareTemp_4: hal.adc_start(TOOL_4_TEMP_PIN); break;
       case MeasureTemp_4: ACCUMULATE_ADC(temp_hotend[4]); break;
     #endif
 
     #if HAS_TEMP_ADC_5
-      case PrepareTemp_5: hal.adc_start(TEMP_5_PIN); break;
+      case PrepareTemp_5: hal.adc_start(TOOL_5_TEMP_PIN); break;
       case MeasureTemp_5: ACCUMULATE_ADC(temp_hotend[5]); break;
     #endif
 
     #if HAS_TEMP_ADC_6
-      case PrepareTemp_6: hal.adc_start(TEMP_6_PIN); break;
+      case PrepareTemp_6: hal.adc_start(TOOL_6_TEMP_PIN); break;
       case MeasureTemp_6: ACCUMULATE_ADC(temp_hotend[6]); break;
     #endif
 
     #if HAS_TEMP_ADC_7
-      case PrepareTemp_7: hal.adc_start(TEMP_7_PIN); break;
+      case PrepareTemp_7: hal.adc_start(TOOL_7_TEMP_PIN); break;
       case MeasureTemp_7: ACCUMULATE_ADC(temp_hotend[7]); break;
     #endif
 
