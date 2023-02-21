@@ -585,9 +585,29 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
 
 #elif ENABLED(MANUAL_SWITCHING_TOOLHEAD)
 
-  #define E_STEP_WRITE(E,V) do{ if ((E) == 0) { E0_STEP_WRITE(V); } else { E1_STEP_WRITE(V); } }while(0)
-  #define    FWD_E_DIR(E)   do{ if ((E) == 0) { E0_DIR_WRITE(HIGH); } else { E1_DIR_WRITE(HIGH); } }while(0)
-  #define    REV_E_DIR(E)   do{ if ((E) == 0) { E0_DIR_WRITE(LOW ); } else { E1_DIR_WRITE(LOW ); } }while(0)
+  #define En_REDIRECT(N) TOOL_##N##_E_STEPPER
+
+  #define __CASE_E_STEP_WRITE(C, S, V) case C: E##S##_STEP_WRITE(V); break;
+  #define _CASE_E_STEP_WRITE(C, S, V) __CASE_E_STEP_WRITE(C, S, V)
+  #define CASE_E_STEP_WRITE(C, V) _CASE_E_STEP_WRITE(C, En_REDIRECT(C), V)
+
+  #define __CASE_FWD_E_DIR(C, S) case C: E##S##_DIR_WRITE(HIGH); break;
+  #define _CASE_FWD_E_DIR(C, S) __CASE_FWD_E_DIR(C, S)
+  #define CASE_FWD_E_DIR(C) _CASE_FWD_E_DIR(C, En_REDIRECT(C))
+
+  #define __CASE_REV_E_DIR(C, S) case C: E##S##_DIR_WRITE(LOW); break;
+  #define _CASE_REV_E_DIR(C, S) __CASE_REV_E_DIR(C, S)
+  #define CASE_REV_E_DIR(C) _CASE_REV_E_DIR(C, En_REDIRECT(C))
+
+  #define E_STEP_WRITE(E,V) do{ switch (E) {     \
+      REPEAT2(E_STEPPERS, CASE_E_STEP_WRITE, V)  \
+    } }while(0)
+  #define    FWD_E_DIR(E)   do{ switch (E) { \
+      REPEAT(E_STEPPERS, CASE_FWD_E_DIR)    \
+    } }while(0)
+  #define    REV_E_DIR(E)   do{ switch (E) { \
+      REPEAT(E_STEPPERS, CASE_REV_E_DIR)     \
+    } }while(0)
 
 #elif E_STEPPERS > 1
 
