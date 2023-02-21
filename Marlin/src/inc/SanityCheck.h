@@ -910,6 +910,14 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "MANUAL_SWITCHING_TOOLHEAD requires matching hotend/EXTRUDER"
   #elif DISABLED(ADVANCED_PAUSE_FEATURE)
     #error "MANUAL_SWITCHING_TOOLHEAD requires ADVANCED_PAUSE_FEATURE."
+  #elif ENABLED(WATCH_ALL_RUNOUT_SENSORS)
+    #error "MANUAL_SWITCHING_TOOLHEAD currently does not support WATCH_ALL_RUNOUT_SENSORS."
+  #elif ENABLED(TEMP_SENSOR_REDUNDANT)
+    #error "MANUAL_SWITCHING_TOOLHEAD currently does not support TEMP_SENSOR_REDUNDANT."
+  #elif ENABLED(BARICUDA)
+    #error "MANUAL_SWITCHING_TOOLHEAD currently does not support BARICUDA."
+  #elif ENABLED(MIXING_EXTRUDER)
+    #error "MANUAL_SWITCHING_TOOLHEAD currently does not support MIXING_EXTRUDER."
   #endif
 
   #if MAN_ST_NUM_TOOLS < 8
