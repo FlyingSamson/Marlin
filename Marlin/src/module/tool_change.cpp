@@ -505,6 +505,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
       stop();
     }
 
+    TERN_(FWRETRACT, fwretract.reset())
     thermalManager.heating_enabled = true;
     stepper.enable_e_steppers();
   }
