@@ -423,6 +423,20 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
     #if MULTI_FILAMENT_SENSOR
       active_runout_sensor = lookup_runout_sensor();
     #endif
+
+    // override stepper driver settings if required
+    #define _TMC_REINIT(T, S)                                                           \
+      stepperE##S.rms_current(TOOL_##T##_E_CURRENT, TOOL_##T##_E_HOLD_MULTIPLIER);      \
+      stepperE##S.intpol(TOOL_##T##_E_INTERPOLATE);                                     \
+      stepperE##S.microsteps(TOOL_##T##_E_MICROSTEPS);                                  \
+      TERN_(HYBRID_THRESHOLD, stepperE##S.set_pwm_thrs(TOOL_##T##_E_HYBRID_THRESHOLD);)
+
+    #define TMC_REINIT(T, S) _TMC_REINIT(T, S)
+    #define _CASE_TOOL_INSERTED(N) TERN_(TOOL_##N##_STEPPER_OVERRIDE, case N: TMC_REINIT(N, TOOL_##N##_E_STEPPER) break;)
+    switch (active_extruder) {
+      REPEAT(HOTENDS, _CASE_TOOL_INSERTED)
+      default: break;
+    }
   }
 
   void mst_init() {
