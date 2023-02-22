@@ -212,7 +212,7 @@
   // Non-hotend tools are classified as "unpowered tools"
   #define UNPOWERED_TOOLS (MAN_ST_NUM_TOOLS - HOTENDS)
 
-  #define E_MANUAL   1                  // Always one E (max) for manual control
+  #define E_MANUAL   E_DRIVERS   // One extruder control for each extruder connection on board
 
 #elif ENABLED(SERVO_SWITCHING_TOOLHEAD) // Toolchanger
 
