@@ -24,6 +24,9 @@
 #include "../inc/MarlinConfigPre.h"
 #include "../HAL/shared/Marduino.h"
 
+
+enum PauseMessage : char;
+
 #if ENABLED(HOST_PROMPT_SUPPORT)
 
   enum PromptReason : uint8_t {
@@ -123,6 +126,8 @@ class HostUI {
     #if ENABLED(ADVANCED_PAUSE_FEATURE)
       static void filament_load_prompt();
     #endif
+
+    static void pause_prompt(const PauseMessage message);
 
   #endif
 

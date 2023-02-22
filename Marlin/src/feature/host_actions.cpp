@@ -28,8 +28,9 @@
 
 #include "host_actions.h"
 
+#include "pause.h"
+
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #include "pause.h"
   #include "../gcode/queue.h"
 #endif
 
@@ -170,6 +171,39 @@ void HostUI::action(FSTR_P const fstr, const bool eol) {
       );
     }
   #endif
+
+  void HostUI::pause_prompt(const PauseMessage message) {
+    FSTR_P fstr;
+    switch (message) {
+      case PAUSE_MESSAGE_PARKING:  fstr = GET_TEXT_F(MSG_HOST_PAUSE_PRINT_PARKING); break;
+      case PAUSE_MESSAGE_CHANGING: fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_INIT); break;
+      case PAUSE_MESSAGE_UNLOAD:   fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_UNLOAD); break;
+      case PAUSE_MESSAGE_WAITING:  fstr = GET_TEXT_F(MSG_HOST_ADVANCED_PAUSE_WAITING); break;
+      case PAUSE_MESSAGE_INSERT:   fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_INSERT); break;
+      case PAUSE_MESSAGE_LOAD:     fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_LOAD); break;
+      case PAUSE_MESSAGE_PURGE:
+        fstr = GET_TEXT_F(TERN(ADVANCED_PAUSE_CONTINUOUS_PURGE, MSG_HOST_FILAMENT_CHANGE_CONT_PURGE, MSG_HOST_FILAMENT_CHANGE_PURGE));
+        break;
+      case PAUSE_MESSAGE_RESUME:   fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_RESUME); break;
+      case PAUSE_MESSAGE_HEAT:     fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_HEAT); break;
+      case PAUSE_MESSAGE_HEATING:  fstr = GET_TEXT_F(MSG_HOST_FILAMENT_CHANGE_HEATING); break;
+      case PAUSE_MESSAGE_OPTION:   fstr = GET_TEXT_F(MSG_FILAMENT_CHANGE_OPTION_HEADER); break;
+      #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
+        case PAUSE_MESSAGE_TOOL_CHANGE:   fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE); break;
+        case PAUSE_MESSAGE_TOOL_CHANGE_0: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_0); break;
+        OPTCODE(HAS_TOOL_1, case PAUSE_MESSAGE_TOOL_CHANGE_1: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_1); break)
+        OPTCODE(HAS_TOOL_2, case PAUSE_MESSAGE_TOOL_CHANGE_2: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_2); break)
+        OPTCODE(HAS_TOOL_3, case PAUSE_MESSAGE_TOOL_CHANGE_3: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_3); break)
+        OPTCODE(HAS_TOOL_4, case PAUSE_MESSAGE_TOOL_CHANGE_4: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_4); break)
+        OPTCODE(HAS_TOOL_5, case PAUSE_MESSAGE_TOOL_CHANGE_5: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_5); break)
+        OPTCODE(HAS_TOOL_6, case PAUSE_MESSAGE_TOOL_CHANGE_6: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_6); break)
+        OPTCODE(HAS_TOOL_7, case PAUSE_MESSAGE_TOOL_CHANGE_7: fstr = GET_TEXT_F(MSG_HOST_PAUSE_TOOL_CHANGE_7); break)
+      #endif
+      case PAUSE_MESSAGE_STATUS:
+      default: return;
+    }
+    hostui.prompt_do(PROMPT_USER_CONTINUE, fstr, FPSTR(CONTINUE_STR));
+  }
 
   //
   // Handle responses from the host, such as:

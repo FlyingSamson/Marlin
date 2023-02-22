@@ -521,6 +521,7 @@ void show_continue_prompt(const bool is_reload, const PauseMessage message/*=PAU
   DEBUG_ECHOLNPGM("... is_reload:", is_reload);
 
   ui.pause_show_message(is_reload ? PAUSE_MESSAGE_INSERT : message);
+  TERN_(HOST_PROMPT_SUPPORT, hostui.pause_prompt(is_reload ? PAUSE_MESSAGE_INSERT : message));
 
   #if ENABLED(SOVOL_SV06_RTS)
     rts.updateTempE0();

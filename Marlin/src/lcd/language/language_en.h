@@ -876,6 +876,20 @@ namespace LanguageNarrow_en {
   LSTR MSG_FILAMENT_CHANGE_CONT_PURGE     = _UxGT(MSG_1_LINE("Click to finish"));
   LSTR MSG_FILAMENT_CHANGE_RESUME         = _UxGT(MSG_1_LINE("Resuming..."));
 
+  #if ENABLED(HOST_ACTION_COMMANDS)
+    LSTR MSG_HOST_ADVANCED_PAUSE_WAITING       = _UxGT("Press Button to resume print");
+    LSTR MSG_HOST_PAUSE_PRINT_PARKING          = _UxGT("Parking...");
+    LSTR MSG_HOST_FILAMENT_CHANGE_INIT         = _UxGT("Wait for filament change to start");
+    LSTR MSG_HOST_FILAMENT_CHANGE_INSERT       = _UxGT("Insert filament and press button to continue");
+    LSTR MSG_HOST_FILAMENT_CHANGE_HEAT         = _UxGT("Press button to heat nozzle");
+    LSTR MSG_HOST_FILAMENT_CHANGE_HEATING      = _UxGT("Nozzle heating. Please wait...");
+    LSTR MSG_HOST_FILAMENT_CHANGE_UNLOAD       = _UxGT("Wait for filament unload");
+    LSTR MSG_HOST_FILAMENT_CHANGE_LOAD         = _UxGT("Wait for filament load");
+    LSTR MSG_HOST_FILAMENT_CHANGE_PURGE        = _UxGT("Wait for filament purge");
+    LSTR MSG_HOST_FILAMENT_CHANGE_CONT_PURGE   = _UxGT("Click to finish filament purge");
+    LSTR MSG_HOST_FILAMENT_CHANGE_RESUME       = _UxGT("Wait for print to resume...");
+  #endif
+
   #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
     LSTR MSG_TOOL_NAME_0                     = _UxGT(TOOL_NAME_0);
     OPTCODE(HAS_TOOL_1, LSTR MSG_TOOL_NAME_1 = _UxGT(TOOL_NAME_1))
@@ -894,6 +908,17 @@ namespace LanguageNarrow_en {
     LSTR MSG_PAUSE_TOOL_CHANGE_5          = _UxGT(MSG_1_LINE("Install Tool 5"));
     LSTR MSG_PAUSE_TOOL_CHANGE_6          = _UxGT(MSG_1_LINE("Install Tool 6"));
     LSTR MSG_PAUSE_TOOL_CHANGE_7          = _UxGT(MSG_1_LINE("Install Tool 7"));
+    #if ENABLED(HOST_ACTION_COMMANDS)
+      LSTR MSG_HOST_PAUSE_TOOL_CHANGE     = _UxGT("Change tool and click to resume");
+      LSTR MSG_HOST_PAUSE_TOOL_CHANGE_0   = _UxGT("Install tool \"" TOOL_NAME_0 "\" and click to resume");
+      OPTCODE(HAS_TOOL_1, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_1 = _UxGT("Install tool \"" TOOL_NAME_1 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_2, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_2 = _UxGT("Install tool \"" TOOL_NAME_2 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_3, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_3 = _UxGT("Install tool \"" TOOL_NAME_3 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_4, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_4 = _UxGT("Install tool \"" TOOL_NAME_4 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_5, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_5 = _UxGT("Install tool \"" TOOL_NAME_5 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_6, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_6 = _UxGT("Install tool \"" TOOL_NAME_6 "\" and click to resume"))
+      OPTCODE(HAS_TOOL_7, LSTR MSG_HOST_PAUSE_TOOL_CHANGE_7 = _UxGT("Install tool \"" TOOL_NAME_7 "\" and click to resume"))
+    #endif
   #endif
 
   LSTR MSG_TMC_DRIVERS                    = _UxGT("TMC Drivers");
