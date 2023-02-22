@@ -174,7 +174,7 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
 #if HAS_TOOL_OFFSETS
 
   inline void normalize_tool_offsets() {
-    for (uint8_t e = 1; e < HOTENDS; ++e)
+    for (uint8_t e = 1; e < NUM_TOOLS; ++e)
       tool_offset[e] -= tool_offset[0];
     tool_offset[0].reset();
   }
@@ -617,7 +617,7 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
     // This function requires normalize_tool_offsets() to be called
     //
     inline void report_tool_offsets() {
-      for (uint8_t e = 1; e < HOTENDS; ++e)
+      for (uint8_t e = 1; e < NUM_TOOLS; ++e)
         SERIAL_ECHOLNPGM_P(PSTR("T"), e, PSTR(" Offset X"), tool_offset[e].x, SP_Y_STR, tool_offset[e].y, SP_Z_STR, tool_offset[e].z);
     }
   #endif
