@@ -482,6 +482,10 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
   }
 
   inline void mst_tool_change(const uint8_t new_tool) {
+    // Don't perfrom manual tool change if tools are on same toolplate (calling side, i.e.,
+    // tool_change(), will perform a "standard multi nozzle change")
+    if (toolplate_map[new_tool] == toolplate_map[active_extruder]) return;
+
     DEBUG_ECHOPGM("tool change, active ", active_extruder, " new ", new_tool);
 
     stepper.disable_e_steppers();
