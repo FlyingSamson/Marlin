@@ -551,6 +551,8 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "You can't enable FIL_RUNOUT8_PULLUP and FIL_RUNOUT8_PULLDOWN at the same time."
   #elif FILAMENT_RUNOUT_DISTANCE_MM < 0
     #error "FILAMENT_RUNOUT_DISTANCE_MM must be greater than or equal to zero."
+  #elif ENABLED(WATCH_ALL_RUNOUT_SENSORS) && !MULTI_FILAMENT_SENSOR
+    #error "WATCH_ALL_RUNOUT_SENSORS requires NUM_RUNOUT_SENSORS to be at least two"
   #elif DISABLED(ADVANCED_PAUSE_FEATURE) && defined(FILAMENT_RUNOUT_SCRIPT)
     static_assert(nullptr == strstr(FILAMENT_RUNOUT_SCRIPT, "M600"), "FILAMENT_RUNOUT_SCRIPT cannot make use of M600 unless ADVANCED_PAUSE_FEATURE is enabled");
   #endif
@@ -910,8 +912,6 @@ static_assert(COUNT(arm) == LOGICAL_AXES, "AXIS_RELATIVE_MODES must contain " _L
     #error "MANUAL_SWITCHING_TOOLHEAD requires matching hotend/EXTRUDER"
   #elif DISABLED(ADVANCED_PAUSE_FEATURE)
     #error "MANUAL_SWITCHING_TOOLHEAD requires ADVANCED_PAUSE_FEATURE."
-  #elif ENABLED(WATCH_ALL_RUNOUT_SENSORS)
-    #error "MANUAL_SWITCHING_TOOLHEAD currently does not support WATCH_ALL_RUNOUT_SENSORS."
   #elif ENABLED(TEMP_SENSOR_REDUNDANT)
     #error "MANUAL_SWITCHING_TOOLHEAD currently does not support TEMP_SENSOR_REDUNDANT."
   #elif ENABLED(BARICUDA)

@@ -65,6 +65,7 @@ typedef Flags<
   // the currently active runout sensor, i.e., the one used by the currently active tool (zero based)
   #if MULTI_FILAMENT_SENSOR
     extern uint8_t active_runout_sensor;
+    TERN_(WATCH_ALL_RUNOUT_SENSORS, extern uint8_t runout_sensors_bitmask;)
   #else
     constexpr uint8_t active_runout_sensor = 0;
   #endif
@@ -155,9 +156,21 @@ class TFilamentMonitor : public FilamentMonitorBase {
         TERN_(HAS_FILAMENT_RUNOUT_DISTANCE, sei());
         #if MULTI_FILAMENT_SENSOR
           #if ENABLED(WATCH_ALL_RUNOUT_SENSORS)
-            const bool ran_out = bool(runout_flags);  // any sensor triggers
-            uint8_t extruder = 0;
-            if (ran_out) while (!runout_flags.test(extruder)) extruder++;
+            #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
+              runout_flags_t::flagbits_t bitmask = runout_flags.b & runout_sensors_bitmask;
+              const bool ran_out = !!bitmask;  // any sensor triggers
+              uint8_t extruder = 0;
+              if (ran_out) {
+                while (!(bitmask & 1)) {
+                  bitmask >>= 1;
+                  extruder++;
+                }
+              }
+            #else
+              const bool ran_out = bool(runout_flags);  // any sensor triggers
+              uint8_t extruder = 0;
+              if (ran_out) while (!runout_flags.test(extruder)) extruder++;
+            #endif
           #else
             const bool ran_out = runout_flags[TERN(MANUAL_SWITCHING_TOOLHEAD, active_runout_sensor, active_extruder)];  // suppress non active extruders
             uint8_t extruder = active_extruder;

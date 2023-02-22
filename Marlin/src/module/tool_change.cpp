@@ -418,11 +418,25 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
     return runout_sensor;
   }
 
+  #if ENABLED(WATCH_ALL_RUNOUT_SENSORS)
+    static uint8_t connected_sensors_bitmask() {
+      uint8_t mask = 0;
+      EXTRUDER_LOOP() {
+        if(toolplate_map[e] == toolplate_map[active_extruder]) {
+          SBI(mask, lookup_runout_sensor(e));
+        }
+      }
+      return mask;
+    }
+  #endif
+
   void mst_load_tool_settings() {
     // lookup runout sensor for active tool
     #if MULTI_FILAMENT_SENSOR
       active_runout_sensor = lookup_runout_sensor();
     #endif
+    // lookup runout sensors for tools on same tool plate
+    TERN_(WATCH_ALL_RUNOUT_SENSORS, runout_sensors_bitmask = connected_sensors_bitmask();)
 
     // override stepper driver settings if required
     #define _TMC_REINIT(T, S)                                                           \

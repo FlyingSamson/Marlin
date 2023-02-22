@@ -33,6 +33,7 @@
 #if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
   #if MULTI_FILAMENT_SENSOR
     uint8_t active_runout_sensor = 0;
+    TERN_(WATCH_ALL_RUNOUT_SENSORS, uint8_t runout_sensors_bitmask = 0;)
   #endif
 #endif
 
