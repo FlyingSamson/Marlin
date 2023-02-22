@@ -1393,7 +1393,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Toolchange park
       #if ENABLED(TOOLCHANGE_PARK) && !HAS_SWITCHING_NOZZLE
-        if (can_move_away && toolchange_settings.enable_park) {
+        if (can_move_away && toolchange_settings.enable_park &&
+            TERN1(MANUAL_SWITCHING_TOOLHEAD, toolplate_map[new_tool] != toolplate_map[old_tool])) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
           #if NONE(TOOLCHANGE_PARK_X_ONLY, TOOLCHANGE_PARK_Y_ONLY)
