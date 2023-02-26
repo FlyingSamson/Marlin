@@ -284,8 +284,8 @@ void GcodeSuite::G28() {
       motion_state_t saved_motion_state = begin_slow_homing();
     #endif
 
-    // Home with tool 0 active, if specified
-    #if ALL(HAS_MULTI_HOTEND, TOOLCHANGE_HOMING_USE_T0)
+    // Home with specific tool active, if one is specified
+    #if ENABLED(HAS_MULTI_HOTEND) && defined(TOOLCHANGE_HOMING_TOOL)
       #if DISABLED(DELTA) || ENABLED(DELTA_HOME_TO_SAFE_ZONE)
         const uint8_t old_tool_index = active_extruder;
       #endif
@@ -293,7 +293,7 @@ void GcodeSuite::G28() {
       #if ENABLED(PARKING_EXTRUDER)
         const bool pe_final_change_must_unpark = parking_extruder_unpark_after_homing(old_tool_index, X_HOME_DIR + 1 == old_tool_index * 2);
       #endif
-      tool_change(0, true);
+      tool_change(TOOLCHANGE_HOMING_TOOL, true);
     #endif
 
     TERN_(HAS_DUPLICATION_MODE, set_duplication_enabled(false));
@@ -548,7 +548,7 @@ void GcodeSuite::G28() {
     TERN_(CAN_SET_LEVELING_AFTER_G28, if (leveling_restore_state) set_bed_leveling_enabled());
 
     // Restore the active tool after homing
-    #if ALL(HAS_MULTI_HOTEND, TOOLCHANGE_HOMING_USE_T0) && (DISABLED(DELTA) || ENABLED(DELTA_HOME_TO_SAFE_ZONE))
+    #if ENABLED(HAS_MULTI_HOTEND) && defined(TOOLCHANGE_HOMING_TOOL) && (DISABLED(DELTA) || ENABLED(DELTA_HOME_TO_SAFE_ZONE))
       tool_change(old_tool_index, TERN(PARKING_EXTRUDER, !pe_final_change_must_unpark, DISABLED(DUAL_X_CARRIAGE)));   // Do move if one of these
     #endif
 
