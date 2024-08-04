@@ -440,7 +440,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
   inline void mst_tool_change(const uint8_t new_tool) {
     DEBUG_ECHOPGM("tool change, active ", active_extruder, " new ", new_tool);
 
-    disable_e_steppers();
+    stepper.disable_e_steppers();
     thermalManager.heating_enabled = false;
     thermalManager.disable_all_heaters(); // ?
 
@@ -458,7 +458,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
     }
 
     thermalManager.heating_enabled = true;
-    enable_e_steppers();
+    stepper.enable_e_steppers();
   }
 
 #elif ENABLED(SERVO_SWITCHING_TOOLHEAD)
