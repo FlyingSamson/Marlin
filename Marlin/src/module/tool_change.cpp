@@ -68,10 +68,6 @@
   #include "stepper.h"
 #endif
 
-#if ENABLED(MANUAL_SWITCHING_TOOLHEAD)
-  #include "../lcd/menu/menu.h"
-#endif
-
 #if ANY(SWITCHING_EXTRUDER, SWITCHING_NOZZLE, SERVO_SWITCHING_TOOLHEAD)
   #include "servo.h"
 #endif
