@@ -125,13 +125,30 @@ int8_t GcodeSuite::get_target_extruder_from_command() {
   #if HAS_TOOLCHANGE
     if (parser.seenval('T')) {
       const int8_t e = parser.value_byte();
+      if (e <  EXTRUDERS) return e;
+      SERIAL_ECHO_START();
+      SERIAL_ECHOLN(C('M'), parser.codenum, F(" " STR_INVALID_EXTRUDER " "), e);
+      return -1;
+    }
+  #endif
+  return TERN_(MANUAL_SWITCHING_TOOLHEAD, active_extruder > EXTRUDERS ? -1 :) active_extruder;
+}
+
+/**
+ * Get the target tool from the T parameter or the active_extruder
+ * Return -1 if the T parameter is out of range
+ */
+int8_t GcodeSuite::get_target_tool_from_command() {
+  #if HAS_TOOLCHANGE
+    if (parser.seenval('T')) {
+      const int8_t e = parser.value_byte();
       if (e < TERN(MANUAL_SWITCHING_TOOLHEAD, MAN_ST_NUM_TOOLS, EXTRUDERS)) return e;
       SERIAL_ECHO_START();
       SERIAL_ECHOLN(C('M'), parser.codenum, F(" " STR_INVALID_EXTRUDER " "), e);
       return -1;
     }
   #endif
-  return TERN(MANUAL_SWITCHING_TOOLHEAD, 0, active_extruder);
+  return active_extruder;
 }
 
 /**

@@ -452,6 +452,7 @@ public:
   static void say_units();
 
   static int8_t get_target_extruder_from_command();
+  static int8_t get_target_tool_from_command();
   static int8_t get_target_e_stepper_from_command(const int8_t dval=-1);
   static void get_destination_from_command();
 
