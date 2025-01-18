@@ -932,7 +932,7 @@ void MarlinSettings::postprocess() {
     {
       #if HAS_TOOL_OFFSETS
         // Skip tool 0 which must be {0, 0, 0}
-        for (uint8_t e = 1; e < HOTENDS; ++e)
+        for (uint8_t e = 1; e < NUM_TOOLS; ++e)
           EEPROM_WRITE(tool_offset[e]);
       #endif
     }
